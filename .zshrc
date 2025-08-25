@@ -53,24 +53,24 @@ precmd() {
     
     # Convert milliseconds to human readable format
     if [ $elapsed -ge 60000 ]; then
-      # 1 minute or more
+      # 1 minute or more - show in red
       minutes=$((elapsed / 60000))
       seconds=$(((elapsed % 60000) / 1000))
       if [ $seconds -gt 0 ]; then
-        export RPS1="%F{yellow}${minutes}m ${seconds}s%f"
+        export RPS1="%F{red}${minutes}m ${seconds}s%f"
       else
-        export RPS1="%F{yellow}${minutes}m%f"
+        export RPS1="%F{red}${minutes}m%f"
       fi
     elif [ $elapsed -ge 1000 ]; then
       # 1 second or more
       seconds=$((elapsed / 1000))
       export RPS1="%F{yellow}${seconds}s%f"
-    elif [ $elapsed -ge 100 ]; then
-      # 100ms or more
+    elif [ $elapsed -ge 10 ]; then
+      # 10ms or more - show in gray
       export RPS1="%F{242}${elapsed}ms%f"
     else
-      # Less than 100ms, don't show
-      export RPS1=""
+      # Less than 10ms - show in very dim gray
+      export RPS1="%F{237}${elapsed}ms%f"
     fi
     
     unset timer

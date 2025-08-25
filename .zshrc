@@ -62,15 +62,15 @@ precmd() {
         export RPS1="%F{red}${minutes}m%f"
       fi
     elif [ $elapsed -ge 1000 ]; then
-      # 1 second or more
+      # 1 second to 60 seconds - show in yellow
       seconds=$((elapsed / 1000))
       export RPS1="%F{yellow}${seconds}s%f"
-    elif [ $elapsed -ge 10 ]; then
-      # 10ms or more - show in gray
-      export RPS1="%F{242}${elapsed}ms%f"
+    elif [ $elapsed -ge 100 ]; then
+      # 100ms to 1 second - show in green
+      export RPS1="%F{green}${elapsed}ms%f"
     else
-      # Less than 10ms - show in very dim gray
-      export RPS1="%F{237}${elapsed}ms%f"
+      # Less than 100ms - show in dim gray
+      export RPS1="%F{242}${elapsed}ms%f"
     fi
     
     unset timer

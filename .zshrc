@@ -178,7 +178,5 @@ if [[ -n $ZELLIJ ]]; then
   add-zsh-hook preexec set_tab_to_command_line
 fi
 
-# Auto-start zellij only in Windows Terminal (WSL) and not already in a zellij session
-if [[ -n "$WT_SESSION" && -z "$ZELLIJ" ]]; then
-  eval "$(zellij setup --generate-auto-start zsh)"
-fi
+# eval "$(zellij setup --generate-auto-start zsh)"
+

@@ -37,13 +37,17 @@ ulimit -S -n 2048
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git node fnm zsh-autosuggestions you-should-use golang zsh-syntax-highlighting zsh-history-substring-search) 
+plugins=(git node fnm zsh-autosuggestions golang zsh-syntax-highlighting zsh-history-substring-search) 
 
 source $ZSH/oh-my-zsh.sh
 
 # Custom command execution time tracking
 preexec() {
   timer=$(($(date +%s%0N)/1000000))
+}
+
+fh() {
+  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
 }
 
 precmd() {
@@ -89,7 +93,6 @@ export LANGUAGE=en_IN.UTF-8
 export EDITOR='nvim'
 export ARCHFLAGS="-arch $(uname -m)"
 export TERM=xterm-256color
-export PAGER=moor
 
 path+=("/usr/local/go/bin")
 path+=("$HOME/.local/kitty.app/bin")
@@ -135,3 +138,43 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+function current_dir() {
+    local current_dir=$PWD
+    if [[ $current_dir == $HOME ]]; then
+        current_dir="~"
+    else
+        current_dir=${current_dir##*/}
+    fi
+    
+    echo $current_dir
+}
+
+function change_tab_title() {
+    local title=$1
+    command nohup zellij action rename-tab $title >/dev/null 2>&1
+}
+
+function set_tab_to_working_dir() {
+    local result=$?
+    local title=$(current_dir)
+    # uncomment the following to show the exit code after a failed command
+    # if [[ $result -gt 0 ]]; then
+    #     title="$title [$result]" 
+    # fi
+
+    change_tab_title $title
+}
+
+function set_tab_to_command_line() {
+    local cmdline=$1
+    change_tab_title $cmdline
+}
+
+if [[ -n $ZELLIJ ]]; then
+    add-zsh-hook precmd set_tab_to_working_dir
+    add-zsh-hook preexec set_tab_to_command_line
+fi
+
+eval "$(zellij setup --generate-auto-start zsh)"
+

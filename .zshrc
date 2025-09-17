@@ -176,5 +176,5 @@ if [[ -n $ZELLIJ ]]; then
     add-zsh-hook preexec set_tab_to_command_line
 fi
 
-eval "$(zellij setup --generate-auto-start zsh)"
+# eval "$(zellij setup --generate-auto-start zsh)"
 

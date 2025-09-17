@@ -2,6 +2,7 @@
 # homebrew
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # the path for .zshrc is set in zshenv in the folder /etc/zshenv
+# Path to your Oh My Zsh installation.
 export ZSH="$HOME/.config/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
 HYPHEN_INSENSITIVE="true"
@@ -10,7 +11,6 @@ ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 zstyle ':omz:update' mode reminder # just remind me to update when it's time
 zstyle ':completion:*' menu select
-autoload -Uz compinit && compinit
 
 # Uncomment the following line to enable command auto-correction.
 ENABLE_CORRECTION="false"
@@ -29,21 +29,21 @@ ulimit -S -n 2048
 # much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git node zsh-autosuggestions golang zsh-syntax-highlighting zsh-history-substring-search)
+plugins=(git node fnm zsh-autosuggestions you-should-use golang zsh-syntax-highlighting zsh-history-substring-search)
 
 source $ZSH/oh-my-zsh.sh
 
 # Custom command execution time tracking
 preexec() {
   timer=$(($(date +%s%0N) / 1000000))
-}
-
-fh() {
-  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
 }
 
 precmd() {
@@ -89,39 +89,29 @@ export LANGUAGE=en_IN.UTF-8
 export EDITOR='nvim'
 export ARCHFLAGS="-arch $(uname -m)"
 export TERM=xterm-256color
+export PAGER=moor
 
 path+=("/usr/local/go/bin")
 path+=("$HOME/.local/kitty.app/bin")
 path+=("$HOME/.local/bin")
 path+=("$HOME/go/bin")
 path+=("/home/linuxbrew/.linuxbrew/opt/postgresql@17/bin")
-
-alias ls="eza"
-alias cat="bat"
-alias du="dust"
-alias explorer="yazi"
-
-# ZSH Paths
-export HISTSIZE=10000
-export SAVEHIST=10000
-export HISTFILE=~/.config/zsh/.zsh_history
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_SPACE
-
-# Paths
-path+=('/usr/local/go/bin')
-path+=('/home/srshah/go/bin')
-path+=('/home/srshah/.local/bin')
-path+=('/home/srshah/go/bun')
-path+=('/home/srshah/.cargo/bin')
-
 export PATH
+
+# Set personal aliases, overriding those provided by Oh My Zsh libs,
+# plugins, and themes. Aliases can be placed here, though Oh My Zsh
+# users are encouraged to define aliases within a top-level file in
+# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
+# - $ZSH_CUSTOM/aliases.zsh
+# - $ZSH_CUSTOM/macos.zsh
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # zoxide
 eval "$(zoxide init --cmd cd zsh)"
-
-export PATH="/home/linuxbrew/.linuxbrew/opt/clang-format/bin:$PATH"
-export PATH="/home/linuxbrew/.linuxbrew/opt/node@22/bin:$PATH"
 
 bindkey '^[^M' autosuggest-accept
 bindkey '^[f' forward-word
@@ -129,56 +119,3 @@ bindkey '^a' beginning-of-line
 bindkey '^e' end-of-line
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/srshah/downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home/srshah/downloads/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/home/srshah/downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/srshah/downloads/google-cloud-sdk/completion.zsh.inc'; fi
-
-export GPG_TTY=$(tty)
-. "/home/srshah/.deno/env"
-
-export PATH="/home/linuxbrew/.linuxbrew/opt/openjdk@21/bin:$PATH"
-
-function current_dir() {
-  local current_dir=$PWD
-  if [[ $current_dir == $HOME ]]; then
-    current_dir="~"
-  else
-    current_dir=${current_dir##*/}
-  fi
-
-  echo $current_dir
-}
-
-function change_tab_title() {
-  local title=$1
-  command nohup zellij action rename-tab $title >/dev/null 2>&1
-}
-
-function set_tab_to_working_dir() {
-  local result=$?
-  local title=$(current_dir)
-  # uncomment the following to show the exit code after a failed command
-  # if [[ $result -gt 0 ]]; then
-  #     title="$title [$result]"
-  # fi
-
-  change_tab_title $title
-}
-
-function set_tab_to_command_line() {
-  local cmdline=$1
-  change_tab_title $cmdline
-}
-
-if [[ -n $ZELLIJ ]]; then
-  add-zsh-hook precmd set_tab_to_working_dir
-  add-zsh-hook preexec set_tab_to_command_line
-fi
-
-# Auto-start zellij only in Windows Terminal (WSL) and not already in a zellij session
-if [[ -n "$WT_SESSION" && -z "$ZELLIJ" ]]; then
-  eval "$(zellij setup --generate-auto-start zsh)"
-fi

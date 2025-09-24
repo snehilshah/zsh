@@ -176,3 +176,4 @@ if [[ -n $ZELLIJ ]]; then
 fi
 
 # eval "$(zellij setup --generate-auto-start zsh)"
+source <(fzf --zsh)

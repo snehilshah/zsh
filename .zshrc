@@ -150,6 +150,14 @@ function current_dir() {
   fi
 
   echo $current_dir
+  local current_dir=$PWD
+  if [[ $current_dir == $HOME ]]; then
+    current_dir="~"
+  else
+    current_dir=${current_dir##*/}
+  fi
+
+  echo $current_dir
 }
 
 function change_tab_title() {
@@ -179,4 +187,4 @@ if [[ -n $ZELLIJ ]]; then
 fi
 
 # eval "$(zellij setup --generate-auto-start zsh)"
-
+source <(fzf --zsh)

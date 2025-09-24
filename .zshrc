@@ -9,7 +9,7 @@ HYPHEN_INSENSITIVE="true"
 
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+zstyle ':omz:update' mode reminder # just remind me to update when it's time
 zstyle ':completion:*' menu select
 
 # Uncomment the following line to enable command auto-correction.
@@ -37,13 +37,13 @@ ulimit -S -n 2048
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git node fnm zsh-autosuggestions golang zsh-syntax-highlighting zsh-history-substring-search) 
+plugins=(git node fnm zsh-autosuggestions golang zsh-syntax-highlighting zsh-history-substring-search)
 
 source $ZSH/oh-my-zsh.sh
 
 # Custom command execution time tracking
 preexec() {
-  timer=$(($(date +%s%0N)/1000000))
+  timer=$(($(date +%s%0N) / 1000000))
 }
 
 fh() {
@@ -52,9 +52,9 @@ fh() {
 
 precmd() {
   if [ $timer ]; then
-    now=$(($(date +%s%0N)/1000000))
-    elapsed=$(($now-$timer))
-    
+    now=$(($(date +%s%0N) / 1000000))
+    elapsed=$(($now - $timer))
+
     # Convert milliseconds to human readable format
     if [ $elapsed -ge 60000 ]; then
       # 1 minute or more - show in red
@@ -76,7 +76,7 @@ precmd() {
       # Less than 100ms - show in dim gray
       export RPS1="%F{242}${elapsed}ms%f"
     fi
-    
+
     unset timer
   else
     export RPS1=""
@@ -127,54 +127,52 @@ bindkey "$terminfo[kcud1]" history-substring-search-down
 FNM_PATH="/home/snehilshah/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
   export PATH="/home/snehilshah/.local/share/fnm:$PATH"
-  eval "`fnm env`"
+  eval "$(fnm env)"
 fi
-
 
 # pnpm
 export PNPM_HOME="/home/snehilshah/.local/share/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
+*":$PNPM_HOME:"*) ;;
+*) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
 
 function current_dir() {
-    local current_dir=$PWD
-    if [[ $current_dir == $HOME ]]; then
-        current_dir="~"
-    else
-        current_dir=${current_dir##*/}
-    fi
-    
-    echo $current_dir
+  local current_dir=$PWD
+  if [[ $current_dir == $HOME ]]; then
+    current_dir="~"
+  else
+    current_dir=${current_dir##*/}
+  fi
+
+  echo $current_dir
 }
 
 function change_tab_title() {
-    local title=$1
-    command nohup zellij action rename-tab $title >/dev/null 2>&1
+  local title=$1
+  command nohup zellij action rename-tab $title >/dev/null 2>&1
 }
 
 function set_tab_to_working_dir() {
-    local result=$?
-    local title=$(current_dir)
-    # uncomment the following to show the exit code after a failed command
-    # if [[ $result -gt 0 ]]; then
-    #     title="$title [$result]" 
-    # fi
+  local result=$?
+  local title=$(current_dir)
+  # uncomment the following to show the exit code after a failed command
+  # if [[ $result -gt 0 ]]; then
+  #     title="$title [$result]"
+  # fi
 
-    change_tab_title $title
+  change_tab_title $title
 }
 
 function set_tab_to_command_line() {
-    local cmdline=$1
-    change_tab_title $cmdline
+  local cmdline=$1
+  change_tab_title $cmdline
 }
 
 if [[ -n $ZELLIJ ]]; then
-    add-zsh-hook precmd set_tab_to_working_dir
-    add-zsh-hook preexec set_tab_to_command_line
+  add-zsh-hook precmd set_tab_to_working_dir
+  add-zsh-hook preexec set_tab_to_command_line
 fi
 
 # eval "$(zellij setup --generate-auto-start zsh)"
-

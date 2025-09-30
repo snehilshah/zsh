@@ -1,9 +1,16 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # homebrew
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # the path for .zshrc is set in zshenv in the folder /etc/zshenv
 export ZSH="$HOME/.config/.oh-my-zsh"
-ZSH_THEME="robbyrussell"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 HYPHEN_INSENSITIVE="true"
 
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
@@ -33,53 +40,13 @@ ulimit -S -n 2048
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git node zsh-autosuggestions golang zsh-syntax-highlighting zsh-history-substring-search)
+plugins=(git kubectl zsh-autosuggestions golang zsh-syntax-highlighting zsh-history-substring-search)
 
 source $ZSH/oh-my-zsh.sh
-
-# Custom command execution time tracking
-preexec() {
-  timer=$(($(date +%s%0N) / 1000000))
-}
 
 fh() {
   eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
 }
-
-precmd() {
-  if [ $timer ]; then
-    now=$(($(date +%s%0N) / 1000000))
-    elapsed=$(($now - $timer))
-
-    # Convert milliseconds to human readable format
-    if [ $elapsed -ge 60000 ]; then
-      # 1 minute or more - show in red
-      minutes=$((elapsed / 60000))
-      seconds=$(((elapsed % 60000) / 1000))
-      if [ $seconds -gt 0 ]; then
-        export RPS1="%F{red}${minutes}m ${seconds}s%f"
-      else
-        export RPS1="%F{red}${minutes}m%f"
-      fi
-    elif [ $elapsed -ge 1000 ]; then
-      # 1 second to 60 seconds - show in yellow
-      seconds=$((elapsed / 1000))
-      export RPS1="%F{yellow}${seconds}s%f"
-    elif [ $elapsed -ge 100 ]; then
-      # 100ms to 1 second - show in green
-      export RPS1="%F{green}${elapsed}ms%f"
-    else
-      # Less than 100ms - show in dim gray
-      export RPS1="%F{242}${elapsed}ms%f"
-    fi
-
-    unset timer
-  else
-    export RPS1=""
-  fi
-}
-
-# User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -150,14 +117,6 @@ function current_dir() {
   fi
 
   echo $current_dir
-  local current_dir=$PWD
-  if [[ $current_dir == $HOME ]]; then
-    current_dir="~"
-  else
-    current_dir=${current_dir##*/}
-  fi
-
-  echo $current_dir
 }
 
 function change_tab_title() {
@@ -168,17 +127,13 @@ function change_tab_title() {
 function set_tab_to_working_dir() {
   local result=$?
   local title=$(current_dir)
-  # uncomment the following to show the exit code after a failed command
-  # if [[ $result -gt 0 ]]; then
-  #     title="$title [$result]"
-  # fi
-
   change_tab_title $title
 }
 
 function set_tab_to_command_line() {
   local cmdline=$1
-  change_tab_title $cmdline
+  local first_word=${cmdline%% *}
+  change_tab_title $first_word
 }
 
 if [[ -n $ZELLIJ ]]; then
@@ -188,3 +143,7 @@ fi
 
 # eval "$(zellij setup --generate-auto-start zsh)"
 source <(fzf --zsh)
+
+# Load kubectl fzf integrations (simple aliases only, no completions)
+source ~/.config/zsh/kubectl-fzf.zsh
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh

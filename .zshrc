@@ -37,7 +37,7 @@ ulimit -S -n 2048
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git node fnm zsh-autosuggestions golang zsh-syntax-highlighting zsh-history-substring-search)
+plugins=(git node kubectl zsh-autosuggestions golang zsh-syntax-highlighting zsh-history-substring-search)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -94,12 +94,25 @@ export EDITOR='nvim'
 export ARCHFLAGS="-arch $(uname -m)"
 export TERM=xterm-256color
 
-path+=("/usr/local/go/bin")
-path+=("$HOME/.local/kitty.app/bin")
-path+=("$HOME/.local/bin")
-path+=("$HOME/go/bin")
-path+=("/home/linuxbrew/.linuxbrew/opt/postgresql@17/bin")
+path+=('/usr/local/go/bin')
+path+=('/home/srshah/go/bin')
+path+=('/home/srshah/.local/bin')
+path+=('/home/srshah/go/bun')
+path+=('/home/srshah/.cargo/bin')
 export PATH
+
+alias ls="eza"
+alias cat="bat"
+alias du="dust"
+alias explorer="yazi"
+alias vi="nvim"
+alias nv="nvim"
+# alias grep="rg"
+
+# ZSH Paths
+export HISTSIZE=10000
+export SAVEHIST=10000
+export HISTFILE=~/.config/zsh/.zsh_history
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
@@ -122,21 +135,6 @@ bindkey '^a' beginning-of-line
 bindkey '^e' end-of-line
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
-
-# fnm
-FNM_PATH="/home/snehilshah/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="/home/snehilshah/.local/share/fnm:$PATH"
-  eval "$(fnm env)"
-fi
-
-# pnpm
-export PNPM_HOME="/home/snehilshah/.local/share/pnpm"
-case ":$PATH:" in
-*":$PNPM_HOME:"*) ;;
-*) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
 
 function current_dir() {
   local current_dir=$PWD
@@ -176,4 +174,4 @@ if [[ -n $ZELLIJ ]]; then
 fi
 
 # eval "$(zellij setup --generate-auto-start zsh)"
-source <(fzf --zsh)
+# source <(fzf --zsh)

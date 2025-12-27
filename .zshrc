@@ -60,7 +60,7 @@ path+=('/usr/local/go/bin')
 path+=('/home/srshah/go/bin')
 path+=('/home/srshah/.local/bin')
 path+=('/home/srshah/go/bun')
-# path+=('/home/srshah/.cargo/bin')
+path+=('/home/srshah/.cargo/bin')
 path+=('/home/srshah/.bun/bin')
 export PATH
 

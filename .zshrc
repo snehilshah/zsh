@@ -4,7 +4,7 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # the path for .zshrc is set in zshenv in the folder /etc/zshenv
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.config/.oh-my-zsh"
-ZSH_THEME="robbyrussell"
+# ZSH_THEME="robbyrussell" # moving to oh-my-posh
 HYPHEN_INSENSITIVE="true"
 
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
@@ -175,3 +175,4 @@ fi
 
 # eval "$(zellij setup --generate-auto-start zsh)"
 # source <(fzf --zsh)
+eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"

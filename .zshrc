@@ -99,6 +99,7 @@ path+=('/home/srshah/go/bin')
 path+=('/home/srshah/.local/bin')
 path+=('/home/srshah/go/bun')
 path+=('/home/srshah/.cargo/bin')
+path+=('/home/srshah/.bun/bin')
 export PATH
 
 alias ls="eza"
@@ -107,6 +108,7 @@ alias du="dust"
 alias explorer="yazi"
 alias vi="nvim"
 alias nv="nvim"
+alias find="fd"
 # alias grep="rg"
 
 # ZSH Paths

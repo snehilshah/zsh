@@ -48,6 +48,7 @@ fh() {
 # User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
 
+# You need to manually build the locale first, in ubuntu you can `sudo nano /etc/locale.gen`, and then uncomment your locale, then just `sudo locale-gen`
 # You may need to manually set your language environment
 export LANG=en_IN.UTF-8
 export LANGUAGE=en_IN.UTF-8

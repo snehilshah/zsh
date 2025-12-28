@@ -103,3 +103,48 @@ bindkey "$terminfo[kcud1]" history-substring-search-down
 # eval "$(zellij setup --generate-auto-start zsh)"
 # source <(fzf --zsh)
 eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
+
+# zellij hack to rename tabs
+if [[ -n "$ZELLIJ" ]]; then
+  zellij_tab_name_update_preexec() {
+    local cmd_line="$1"
+    local cmd=""
+    local max_len=15
+    
+    # Skip wrapper commands and get the actual command
+    local words=(${(z)cmd_line})
+    for word in "${words[@]}"; do
+      case "$word" in
+        sudo|watch|nohup|time|nice|ionice|strace|ltrace|env|command|exec|busybox)
+          continue
+          ;;
+        -*)
+          continue  # Skip flags
+          ;;
+        *)
+          cmd="$word"
+          break
+          ;;
+      esac
+    done
+    
+    # Truncate if too long
+    if [[ ${#cmd} -gt $max_len ]]; then
+      cmd="${cmd:0:$max_len}.."
+    fi
+    
+    if [[ -n "$cmd" ]]; then
+      command zellij action rename-tab "$cmd" &>/dev/null
+    fi
+  }
+  
+  zellij_tab_name_update_precmd() {
+    local dir="${PWD##*/}"
+    [[ ${#dir} -gt 15 ]] && dir="${dir:0:13}.."
+    command zellij action rename-tab "$dir" &>/dev/null
+  }
+  
+  autoload -Uz add-zsh-hook
+  add-zsh-hook preexec zellij_tab_name_update_preexec
+  add-zsh-hook precmd zellij_tab_name_update_precmd
+fi

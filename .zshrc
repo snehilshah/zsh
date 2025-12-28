@@ -100,6 +100,17 @@ bindkey '^e' end-of-line
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
 
+fzf() {
+   case "$1" in
+      --bash|--zsh|--fish|--version|-h|--help|--man)
+         command fzf "$@"
+         ;;
+      *)
+         fzf-zellij "$@"
+         ;;
+   esac
+}
+
 # eval "$(zellij setup --generate-auto-start zsh)"
 # source <(fzf --zsh)
 eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"

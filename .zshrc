@@ -159,3 +159,9 @@ if [[ -n "$ZELLIJ" ]]; then
   add-zsh-hook preexec zellij_tab_name_update_preexec
   add-zsh-hook precmd zellij_tab_name_update_precmd
 fi
+
+# was already working, but still added here for clarity, maybe oh-my-zsh is doing it too
+# use Ctrl+X Ctrl+E to open the command line in your default editor (NVIM)
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^X^E' edit-command-line

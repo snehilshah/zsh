@@ -29,8 +29,8 @@ ulimit -S -n 2048
 # much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+# Custom folder for oh-my-zsh (same git repo as zsh config)
+ZSH_CUSTOM="$HOME/.config/zsh/custom"
 
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/

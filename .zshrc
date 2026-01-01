@@ -169,3 +169,13 @@ bindkey '^X^E' edit-command-line
 # Advanced mv for zsh
 autoload zmv
 
+# These are suffix aliases to specify what to do when a file name is put with the ending suffix
+alias -s json=jless
+alias -s md=bat
+alias -s go='$EDITOR'
+alias -s rs='$EDITOR'
+alias -s txt=bat
+alias -s log=bat
+alias -s py='$EDITOR'
+alias -s js='$EDITOR'
+alias -s ts='$EDITOR'

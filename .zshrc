@@ -179,3 +179,5 @@ alias -s log=bat
 alias -s py='$EDITOR'
 alias -s js='$EDITOR'
 alias -s ts='$EDITOR'
+alias -g PP="| pino-pretty"
+

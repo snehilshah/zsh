@@ -179,5 +179,17 @@ alias -s log=bat
 alias -s py='$EDITOR'
 alias -s js='$EDITOR'
 alias -s ts='$EDITOR'
+
 alias -g PP="| pino-pretty"
 
+# Custom widget to copy current command line to clipboard using Ctrl+X Ctrl+C
+function copy-buffer-to-clipboard() {
+  echo -n "$BUFFER" | pbcopy
+  zle -M "Copied to clipboard"
+}
+zle -N copy-buffer-to-clipboard
+bindkey '^X^C' copy-buffer-to-clipboard
+
+# Insert git commit template (Ctrl+X, G, C)
+# \C-b moves cursor back one position
+bindkey -s '^Xgc' 'git commit -m ""\C-b'

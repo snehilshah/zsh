@@ -72,6 +72,11 @@ pretty_git_format() {
     # Shorten names
     sed -Ee 's/<Andrew Burgess>/<me>/' |
     sed -Ee 's/<([^ >]+) [^>]*>/<\1>/' |
+    # Replace multiple tags with 🏷️ and count
+    perl -pe 's/\(([^)]*)\)/($t=$1)=~s{tag: [^,)]+,?\s*}{}g while $t=~m{tag:}; $c=()=$1=~m{tag:}g; $c>0 ? "($t🏷️$c)" : "($1)"/ge' |
+    # Clean up trailing commas and spaces in refs
+    sed -Ee 's/,\s*🏷️/🏷️/g' |
+    sed -Ee 's/\(\s*🏷️/(🏷️/g' |
     # Line columns up based on } delimiter
     column -s '}' -t
 }

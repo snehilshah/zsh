@@ -72,11 +72,26 @@ pretty_git_format() {
     # Shorten names
     sed -Ee 's/<Andrew Burgess>/<me>/' |
     sed -Ee 's/<([^ >]+) [^>]*>/<\1>/' |
-    # Replace multiple tags with 🏷️ and count
-    perl -pe 's/\(([^)]*)\)/($t=$1)=~s{tag: [^,)]+,?\s*}{}g while $t=~m{tag:}; $c=()=$1=~m{tag:}g; $c>0 ? "($t🏷️$c)" : "($1)"/ge' |
-    # Clean up trailing commas and spaces in refs
-    sed -Ee 's/,\s*🏷️/🏷️/g' |
-    sed -Ee 's/\(\s*🏷️/(🏷️/g' |
+    # Replace multiple tags with tag icon and count
+    # TODO: make this a separate function for clarity
+    awk '{
+      while (match($0, /\([^)]*tag:[^)]*\)/)) {
+        ref = substr($0, RSTART, RLENGTH)
+        count = gsub(/tag: [^,)]+/, "", ref)
+        gsub(/,\s*,/, ",", ref)
+        gsub(/\(\s*,\s*/, "(", ref)
+        gsub(/,\s*\)/, ")", ref)
+        gsub(/\(\s*\)/, "", ref)
+        icon = (count == 1) ? "󰓹 " : "󰓻 "
+        if (ref ~ /\([^)]+\)/) {
+          sub(/\)$/, " " icon count ")", ref)
+        } else {
+          ref = "(" icon count ")"
+        }
+        $0 = substr($0, 1, RSTART-1) ref substr($0, RSTART+RLENGTH)
+      }
+      print
+    }' |
     # Line columns up based on } delimiter
     column -s '}' -t
 }

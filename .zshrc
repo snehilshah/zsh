@@ -56,22 +56,12 @@ export EDITOR='nvim'
 export ARCHFLAGS="-arch $(uname -m)"
 export TERM=xterm-256color
 
-path+=('/usr/local/go/bin')
-path+=('/home/srshah/go/bin')
-path+=('/home/srshah/.local/bin')
-path+=('/home/srshah/go/bun')
-path+=('/home/srshah/.cargo/bin')
-path+=('/home/srshah/.bun/bin')
+path+=('/usr/local/go/bin')                   # go install path
+path+=('/home/snehilshah/go/bin')             # custom applications installed by golang
+path+=('/home/snehilshah/.local/bin')
+path+=('/home/snehilshah/.cargo/bin')
+path+=('/home/snehilshah/.bun/bin')
 export PATH
-
-alias ls="eza"
-alias cat="bat"
-alias du="dust"
-alias explorer="yazi"
-alias vi="nvim"
-alias nv="nvim"
-alias find="fd"
-# alias grep="rg"
 
 # ZSH Paths
 export HISTSIZE=10000

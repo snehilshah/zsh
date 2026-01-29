@@ -169,6 +169,13 @@ alias -s log=bat
 alias -s py='$EDITOR'
 alias -s js='$EDITOR'
 alias -s ts='$EDITOR'
+alias ls="eza"
+alias cat="bat"
+alias du="dust"
+alias vi="nvim"
+alias nv="nvim"
+alias find="fd"
+alias grep="rg"
 
 alias -g PP="| pino-pretty"
 

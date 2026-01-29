@@ -190,3 +190,4 @@ bindkey '^X^C' copy-buffer-to-clipboard
 # Insert git commit template (Ctrl+X, G, C)
 # \C-b moves cursor back one position
 bindkey -s '^Xgc' 'git commit -m ""\C-b'
+fpath+=${ZDOTDIR:-~}/.zsh_functions

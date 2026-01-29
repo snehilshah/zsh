@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # homebrew
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-# the path for .zshrc is set in zshenv in the folder /etc/zshenv
+# the path for .zshrc is set in zshenv in the folder /etc/zsh/zshenv
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.config/.oh-my-zsh"
 # ZSH_THEME="robbyrussell" # moving to oh-my-posh

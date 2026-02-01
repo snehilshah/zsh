@@ -181,3 +181,17 @@ bindkey '^X^C' copy-buffer-to-clipboard
 # \C-b moves cursor back one position
 bindkey -s '^Xgc' 'git commit -m ""\C-b'
 fpath+=${ZDOTDIR:-~}/.zsh_functions
+
+
+sourceenv() {
+  local envfile="${1:-.env}"
+
+  if [[ ! -f "$envfile" ]]; then
+    echo "sourceenv: file not found: $envfile" >&2
+    return 1
+  fi
+
+  set -a          # auto-export all variables
+  source "$envfile"
+  set +a
+}

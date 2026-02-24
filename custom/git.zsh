@@ -36,6 +36,11 @@ BRANCH_CONTENTS="%(contents:subject)"
 
 BRANCH_FORMAT="}$BRANCH_PREFIX}$BRANCH_REF}$BRANCH_HASH}$BRANCH_DATE}$BRANCH_AUTHOR}$BRANCH_CONTENTS"
 
+# Nerd Font icons for git decorations (Devicons/Powerline BMP range - safe everywhere)
+ICON_BRANCH=$'\ue725'  #  nf-dev-git_branch
+ICON_TAG=$'\uf02b'     #  nf-fa-tag
+ICON_REMOTE=$'\uf0c2'  #  nf-fa-cloud
+
 show_git_head() {
   pretty_git_log -1
   git show -p --pretty="tformat:"
@@ -72,6 +77,10 @@ pretty_git_format() {
     # Shorten names
     sed -Ee 's/<Andrew Burgess>/<me>/' |
     sed -Ee 's/<([^ >]+) [^>]*>/<\1>/' |
+    # Replace git decoration labels with Nerd Font icons
+    sed -Ee "s/HEAD -> /${ICON_BRANCH} /g" |
+    sed -Ee "s/tag: /${ICON_TAG} /g" |
+    sed -Ee "s|origin/|${ICON_REMOTE} |g" |
     # Line columns up based on } delimiter
     column -s '}' -t
 }

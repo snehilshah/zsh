@@ -91,6 +91,6 @@ git_page_maybe() {
     cat
   else
     # Page only if needed.
-    less --quit-if-one-screen
+    moor --quit-if-one-screen
   fi
 }

@@ -197,3 +197,4 @@ sourceenv() {
 }
 
 export GIT_CONFIG_SYSTEM="/home/snehilshah/.config/git/gitconfig"
+export PATH="/home/linuxbrew/.linuxbrew/opt/node@22/bin:$PATH"

@@ -50,8 +50,8 @@ fh() {
 
 # You need to manually build the locale first, in ubuntu you can `sudo nano /etc/locale.gen`, and then uncomment your locale, then just `sudo locale-gen`
 # You may need to manually set your language environment
-export LANG=en_IN.UTF-8
-export LANGUAGE=en_IN.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
 export EDITOR='nvim'
 export ARCHFLAGS="-arch $(uname -m)"
 export TERM=xterm-256color

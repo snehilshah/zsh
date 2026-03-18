@@ -59,7 +59,7 @@ export TERM=xterm-256color
 path+=('/usr/local/go/bin')                   # go install path
 path+=('/home/snehilshah/go/bin')             # custom applications installed by golang
 path+=('/home/snehilshah/.local/bin')
-path+=('/home/snehilshah/.cargo/bin')
+# path+=('/home/snehilshah/.cargo/bin')       # .zshenv sources .cargo/env which handles the paths
 path+=('/home/snehilshah/.bun/bin')
 export PATH
 

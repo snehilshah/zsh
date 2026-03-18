@@ -165,7 +165,7 @@ alias vi="nvim"
 alias nv="nvim"
 # alias find="fd"
 # alias grep="rg"
-alias nve="neovide --fork"
+alias nve="neovide --fork --frame none "
 
 alias -g PP="| pino-pretty"
 

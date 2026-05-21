@@ -1,200 +1,121 @@
-#!/usr/bin/env bash
-# homebrew
+#!/usr/bin/env zsh
+
+# ---------- Homebrew Setup ----------
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-# the path for .zshrc is set in zshenv in the folder /etc/zsh/zshenv
-# Path to your Oh My Zsh installation.
-export ZSH="$HOME/.config/.oh-my-zsh"
-# ZSH_THEME="robbyrussell" # moving to oh-my-posh
-HYPHEN_INSENSITIVE="true"
 
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-
-zstyle ':omz:update' mode reminder # just remind me to update when it's time
-zstyle ':completion:*' menu select
-
-# Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="false"
-
-setopt HIST_IGNORE_DUPS
-setopt ALWAYS_TO_END
-setopt APPEND_HISTORY
-setopt COMPLETE_IN_WORD
-setopt EXTENDED_HISTORY
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_SPACE
+# ---------- Shell Options & Completions ----------
+setopt AUTO_CD               # cd by typing directory name
+setopt NO_BEEP               # quiet shell
+setopt NUMERIC_GLOB_SORT     # sort filenames numerically
 ulimit -S -n 2048
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+# Completion styling and behavior
+setopt COMPLETE_IN_WORD      # allow completion from within a word
+setopt ALWAYS_TO_END         # move cursor to end of word after completion
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' # case-insensitive matches
 
-# Custom folder for oh-my-zsh (same git repo as zsh config)
-ZSH_CUSTOM="$HOME/.config/zsh/custom"
+# Load native completion system
+autoload -Uz compinit
+export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
+compinit -d "$ZSH_COMPDUMP"
 
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git node kubectl zsh-autosuggestions golang zsh-syntax-highlighting zsh-history-substring-search)
+# ---------- Plugins (Direct Loading) ----------
+# We source your existing plugin clones directly. This is extremely fast!
+# ---------- Plugins (Dynamic Loading via plugins.zsh) ----------
+source "$ZDOTDIR/plugins.zsh"
 
-source $ZSH/oh-my-zsh.sh
+# ---------- Word Style & Key Bindings ----------
+# Use Bash-style word boundaries (so Alt+Backspace and Alt-navigation delete/move by segments)
+autoload -U select-word-style
+select-word-style bash
 
-fh() {
-  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
-}
-
-# User configuration
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You need to manually build the locale first, in ubuntu you can `sudo nano /etc/locale.gen`, and then uncomment your locale, then just `sudo locale-gen`
-# You may need to manually set your language environment
-export LANG=en_US.UTF-8
-export LANGUAGE=en_US.UTF-8
-export EDITOR='nvim'
-export ARCHFLAGS="-arch $(uname -m)"
-export TERM=xterm-256color
-
-path+=('/usr/local/go/bin')                   # go install path
-path+=('/home/snehilshah/go/bin')             # custom applications installed by golang
-path+=('/home/snehilshah/.local/bin')
-# path+=('/home/snehilshah/.cargo/bin')       # .zshenv sources .cargo/env which handles the paths
-path+=('/home/snehilshah/.bun/bin')
-export PATH
-
-# ZSH Paths
-export HISTSIZE=10000
-export SAVEHIST=10000
-export HISTFILE=~/.config/zsh/.zsh_history
-
-# Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases can be placed here, though Oh My Zsh
-# users are encouraged to define aliases within a top-level file in
-# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
-# - $ZSH_CUSTOM/aliases.zsh
-# - $ZSH_CUSTOM/macos.zsh
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# zoxide
-eval "$(zoxide init --cmd cd zsh)"
+# Explicitly bind Alt+Backspace to delete a word segment
+bindkey '^[^?' backward-kill-word
+bindkey '^[^H' backward-kill-word
 
 bindkey '^[^M' autosuggest-accept
 bindkey '^[f' forward-word
 bindkey '^a' beginning-of-line
 bindkey '^e' end-of-line
-bindkey "$terminfo[kcuu1]" history-substring-search-up
-bindkey "$terminfo[kcud1]" history-substring-search-down
 
-# eval "$(zellij setup --generate-auto-start zsh)"
-source <(fzf --zsh)
-eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
-
-# zellij hack to rename tabs
-if [[ -n "$ZELLIJ" ]]; then
-  zellij_tab_name_update_preexec() {
-    local cmd_line="$1"
-    local cmd=""
-    local max_len=15
-    
-    # Skip wrapper commands and get the actual command
-    local words=(${(z)cmd_line})
-    for word in "${words[@]}"; do
-      case "$word" in
-        sudo|watch|nohup|time|nice|ionice|strace|ltrace|env|command|exec|busybox)
-          continue
-          ;;
-        -*)
-          continue  # Skip flags
-          ;;
-        *)
-          cmd="$word"
-          break
-          ;;
-      esac
-    done
-    
-    # Truncate if too long
-    if [[ ${#cmd} -gt $max_len ]]; then
-      cmd="${cmd:0:$max_len}.."
-    fi
-    
-    if [[ -n "$cmd" ]]; then
-      command zellij action rename-tab "$cmd" &>/dev/null
-    fi
-  }
-  
-  zellij_tab_name_update_precmd() {
-    local dir="${PWD##*/}"
-    [[ ${#dir} -gt 15 ]] && dir="${dir:0:13}.."
-    command zellij action rename-tab "$dir" &>/dev/null
-  }
-  
-  autoload -Uz add-zsh-hook
-  add-zsh-hook preexec zellij_tab_name_update_preexec
-  add-zsh-hook precmd zellij_tab_name_update_precmd
+# Up/Down arrow keys for history substring search with terminfo guards & fallbacks
+if [[ -n "$terminfo[kcuu1]" ]]; then
+  bindkey "$terminfo[kcuu1]" history-substring-search-up
+else
+  bindkey '^[[A' history-substring-search-up
 fi
 
-# was already working, but still added here for clarity, maybe oh-my-zsh is doing it too
-# use Ctrl+X Ctrl+E to open the command line in your default editor (NVIM)
+if [[ -n "$terminfo[kcud1]" ]]; then
+  bindkey "$terminfo[kcud1]" history-substring-search-down
+else
+  bindkey '^[[B' history-substring-search-down
+fi
+
+# Edit current command line in NVIM (Ctrl+X Ctrl+E)
 autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey '^X^E' edit-command-line
 
-# Advanced mv for zsh
+# Insert git commit template (Ctrl+X, G, C)
+bindkey -s '^Xgc' 'git commit -m ""\C-b'
+
+# ---------- History Setup ----------
+export HISTSIZE=10000
+export SAVEHIST=10000
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+setopt APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_SPACE
+setopt SHARE_HISTORY
+setopt HIST_FIND_NO_DUPS
+setopt EXTENDED_HISTORY
+
+# ---------- Custom Paths & Environment ----------
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+export EDITOR='nvim'
+export ARCHFLAGS="-arch $(uname -m)"
+
+path+=(
+  '/usr/local/go/bin'
+  '/home/snehilshah/go/bin'
+  '/home/snehilshah/.local/bin'
+  '/home/snehilshah/.bun/bin'
+  '/home/linuxbrew/.linuxbrew/opt/node@24/bin'
+)
+export PATH
+
+export GIT_CONFIG_SYSTEM="/home/snehilshah/.config/git/gitconfig"
+
+# ---------- Sourced Helper Scripts & Aliases ----------
+source "$ZDOTDIR/git.zsh"
+source "$ZDOTDIR/aliases.zsh"
+source "$ZDOTDIR/fzf.zsh"
+source "$ZDOTDIR/kubernetes.zsh"
+
+# Suffix alias utility
 autoload zmv
 
-# These are suffix aliases to specify what to do when a file name is put with the ending suffix
-alias -s json=jless
-alias -s md=bat
-alias -s go='$EDITOR'
-alias -s rs='$EDITOR'
-alias -s txt=bat
-alias -s log=bat
-alias -s py='$EDITOR'
-alias -s js='$EDITOR'
-alias -s ts='$EDITOR'
-alias ls="eza"
-# alias cat="bat"
-alias du="dust"
-alias vi="nvim"
-alias nv="nvim"
-# alias find="fd"
-# alias grep="rg"
-alias nve="neovide --fork --frame none "
+# ---------- Integrative Initializations ----------
+# zoxide
+eval "$(zoxide init --cmd cd zsh)"
+# oh-my-posh
+eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
 
-alias -g PP="| pino-pretty"
-
-# Custom widget to copy current command line to clipboard using Ctrl+X Ctrl+C
-function copy-buffer-to-clipboard() {
-  echo -n "$BUFFER" | pbcopy
-  zle -M "Copied to clipboard"
+# ---------- Helper Functions ----------
+fh() {
+  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
 }
-zle -N copy-buffer-to-clipboard
-bindkey '^X^C' copy-buffer-to-clipboard
-
-# Insert git commit template (Ctrl+X, G, C)
-# \C-b moves cursor back one position
-bindkey -s '^Xgc' 'git commit -m ""\C-b'
-fpath+=${ZDOTDIR:-~}/.zsh_functions
-
 
 sourceenv() {
   local envfile="${1:-.env}"
-
   if [[ ! -f "$envfile" ]]; then
     echo "sourceenv: file not found: $envfile" >&2
     return 1
   fi
-
-  set -a          # auto-export all variables
+  set -a
   source "$envfile"
   set +a
 }
-
-export GIT_CONFIG_SYSTEM="/home/snehilshah/.config/git/gitconfig"
-export PATH="/home/linuxbrew/.linuxbrew/opt/node@22/bin:$PATH"

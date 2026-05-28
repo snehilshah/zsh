@@ -20,46 +20,6 @@ autoload -Uz compinit
 export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
 compinit -d "$ZSH_COMPDUMP"
 
-# ---------- Plugins (Direct Loading) ----------
-# We source your existing plugin clones directly. This is extremely fast!
-# ---------- Plugins (Dynamic Loading via plugins.zsh) ----------
-source "$ZDOTDIR/plugins.zsh"
-
-# ---------- Word Style & Key Bindings ----------
-# Use Bash-style word boundaries (so Alt+Backspace and Alt-navigation delete/move by segments)
-autoload -U select-word-style
-select-word-style bash
-
-# Explicitly bind Alt+Backspace to delete a word segment
-bindkey '^[^?' backward-kill-word
-bindkey '^[^H' backward-kill-word
-
-bindkey '^[^M' autosuggest-accept
-bindkey '^[f' forward-word
-bindkey '^a' beginning-of-line
-bindkey '^e' end-of-line
-
-# Up/Down arrow keys for history substring search with terminfo guards & fallbacks
-if [[ -n "$terminfo[kcuu1]" ]]; then
-  bindkey "$terminfo[kcuu1]" history-substring-search-up
-else
-  bindkey '^[[A' history-substring-search-up
-fi
-
-if [[ -n "$terminfo[kcud1]" ]]; then
-  bindkey "$terminfo[kcud1]" history-substring-search-down
-else
-  bindkey '^[[B' history-substring-search-down
-fi
-
-# Edit current command line in NVIM (Ctrl+X Ctrl+E)
-autoload -Uz edit-command-line
-zle -N edit-command-line
-bindkey '^X^E' edit-command-line
-
-# Insert git commit template (Ctrl+X, G, C)
-bindkey -s '^Xgc' 'git commit -m ""\C-b'
-
 # ---------- History Setup ----------
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -94,6 +54,8 @@ source "$ZDOTDIR/git.zsh"
 source "$ZDOTDIR/aliases.zsh"
 source "$ZDOTDIR/fzf.zsh"
 source "$ZDOTDIR/kubernetes.zsh"
+source "$ZDOTDIR/plugins.zsh"
+source "$ZDOTDIR/keyboards.zsh"
 
 # Suffix alias utility
 autoload zmv

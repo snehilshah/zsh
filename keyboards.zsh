@@ -1,8 +1,6 @@
 # ---------- Word Style & Key Bindings ----------
-# Use Bash-style word boundaries (so Alt+Backspace and Alt-navigation
-# delete/move by segments)
-autoload -U select-word-style
-select-word-style bash
+# Treat '/' as a word separator by excluding it from WORDCHARS
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
 # Explicitly bind Alt+Backspace to delete a complete word
 bindkey '^[^?' backward-kill-word
@@ -40,8 +38,8 @@ bindkey -s '^Xgc' 'git commit -m ""\C-b'
 # Covers different terminal escape sequences (xterm, rxvt, tmux, kitty, alacritty, etc.)
 bindkey "^[[1;5D" backward-word
 bindkey "^[[1;5C" forward-word
-bindkey "^[OD" backward-word
-bindkey "^[OC" forward-word
+bindkey "^[OD" backward-char
+bindkey "^[OC" forward-char
 bindkey "^[[5D" backward-word
 bindkey "^[[5C" forward-word
 

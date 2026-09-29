@@ -8,7 +8,6 @@ alias zla="zellij a"
 alias zda="zellij da"
 alias zka="zellij ka"
 
-
 # These are suffix aliases to specify what to do when a file name is put with the ending suffix
 alias -s json=jless
 alias -s md=bat
@@ -55,6 +54,3 @@ alias gp="git push"
 alias gl="git log --oneline -n 15"
 alias gpsup='git push -u origin $(git symbolic-ref --short HEAD)'
 alias gsw="git switch"
-
-# Global alias for quick pino-pretty piping
-alias -g PP="| pino-pretty"

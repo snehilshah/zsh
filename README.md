@@ -1,30 +1,30 @@
 # ZSH Configuration
 
-Personal zsh configuration with oh-my-zsh and custom plugins.
+Personal standalone Zsh configuration with Oh My Posh and Homebrew-managed plugins. Oh My Zsh is not required.
 
 ## Setup
 
 ### Prerequisites
 
-- [oh-my-zsh](https://ohmyz.sh/) installed at `~/.config/.oh-my-zsh`
+- Zsh and Git
 - [oh-my-posh](https://ohmyposh.dev/) for prompt theming
 - [Homebrew](https://brew.sh/) (Linuxbrew)
 
 ### Clone Repository
 
 ```bash
-git clone --recursive https://github.com/YOUR_USERNAME/zsh.git ~/.config/zsh
+git clone https://github.com/snehilshah/zsh.git ~/.config/zsh
 ```
 
-Or if already cloned without submodules:
+Install the three Zsh plugins with Homebrew:
 
 ```bash
-git submodule update --init --recursive
+brew install zsh-autosuggestions zsh-history-substring-search zsh-fast-syntax-highlighting
 ```
 
-### Symlink (if needed)
+### Locate Shell Configuration
 
-Ensure your shell knows where to find the config. Add to `/etc/zshenv` or set `ZDOTDIR`:
+Ensure your shell knows where to find the config. Set `ZDOTDIR` before starting Zsh (or in your distribution's global `zshenv`):
 
 ```bash
 export ZDOTDIR="$HOME/.config/zsh"
@@ -35,31 +35,30 @@ export ZDOTDIR="$HOME/.config/zsh"
 ```
 zsh/
 ├── .zshrc                 # Main zsh configuration
-├── .zsh_history           # Command history
-├── custom/
-│   ├── aliases.zsh        # Custom aliases
-│   ├── git.zsh            # Git-related customizations
-│   ├── completions/       # Custom completions
-│   │   └── _zellij
-│   └── plugins/           # oh-my-zsh plugins (submodules)
-│       ├── zsh-autosuggestions
-│       ├── zsh-syntax-highlighting
-│       └── zsh-history-substring-search
+├── .zshenv                # Shell environment setup
+├── aliases.zsh            # Custom aliases
+├── git.zsh                # Git-related customizations
+├── fzf.zsh                # Fuzzy-finder integration
+├── kubernetes.zsh         # Kubernetes helpers
+├── keyboards.zsh          # Key bindings and paste settings
+└── plugins.zsh            # Loads Homebrew-installed plugins
 ```
 
-## Plugins (Submodules)
+## Plugins (Homebrew)
 
 | Plugin | Description |
 |--------|-------------|
 | [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | Fish-like autosuggestions |
-| [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | Syntax highlighting for commands |
+| [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting) | Syntax highlighting for commands |
 | [zsh-history-substring-search](https://github.com/zsh-users/zsh-history-substring-search) | Fish-like history search |
 
-### Update Plugins
+`plugins.zsh` loads the Homebrew installations at shell startup. Homebrew manages installation and updates:
 
 ```bash
-git submodule update --remote
+brew upgrade zsh-autosuggestions zsh-history-substring-search zsh-fast-syntax-highlighting
 ```
+
+Start a new shell after an update.
 
 ## Key Bindings
 

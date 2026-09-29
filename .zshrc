@@ -7,6 +7,7 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 [[ -r "$ZDOTDIR/env.local.zsh" ]] && source "$ZDOTDIR/env.local.zsh"
 
 # ---------- Shell Options & Completions ----------
+bindkey -e               # use emacs-style editing even when EDITOR is nvim
 setopt AUTO_CD               # cd by typing directory name
 setopt NO_BEEP               # quiet shell
 setopt NUMERIC_GLOB_SORT     # sort filenames numerically

@@ -38,6 +38,7 @@ If `~/.zshenv` already exists, source `"$HOME/.config/zsh/.zshenv"` from it inst
 zsh/
 ├── .zshrc                 # Main zsh configuration
 ├── .zshenv                # Shell environment setup
+├── env.local.zsh          # Local application variables and secrets (not tracked)
 ├── aliases.zsh            # Custom aliases
 ├── git.zsh                # Git-related customizations
 ├── fzf.zsh                # Fuzzy-finder integration
@@ -45,6 +46,8 @@ zsh/
 ├── keyboards.zsh          # Key bindings and paste settings
 └── plugins.zsh            # Loads Homebrew-installed plugins
 ```
+
+`.zshenv` contains base settings used by every Zsh process. Interactive settings live in `.zshrc`, which also loads the ignored `env.local.zsh` when present. Keep API keys and machine-specific application variables in that local file with permissions `600`.
 
 ## Plugins (Homebrew)
 

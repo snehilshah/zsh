@@ -1,3 +1,5 @@
+typeset -U path PATH
+
 # ---------- XDG base directories ----------
 # Centralizes config/cache/data locations
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -9,23 +11,6 @@ export XDG_STATE_HOME="$HOME/.local/state"
 # Prevent Ubuntu's global /etc/zsh/zshrc from running compinit prematurely
 export skip_global_compinit=1
 
-# ---------- Editor ----------
-# Default editor used by git, crontab, etc.
-export EDITOR="nvim"
-export VISUAL="nvim"
-
-# ---------- Pager ----------
-if command -v bat >/dev/null 2>&1; then
-  export MANPAGER="bat -l man -p"
-elif command -v batcat >/dev/null 2>&1; then
-  export MANPAGER="batcat -l man -p"
-fi
-
-# ---------- GPG ----------
-export GPG_TTY=$(tty)
-
-# ---------- PATH ----------
+# ---------- Base PATH ----------
 export PATH="$HOME/.local/bin:$PATH"
-
-
-. "$HOME/.cargo/env"
+[[ -r "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"

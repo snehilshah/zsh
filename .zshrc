@@ -18,10 +18,11 @@ setopt COMPLETE_IN_WORD      # allow completion from within a word
 setopt ALWAYS_TO_END         # move cursor to end of word after completion
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' # case-insensitive matches
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
 
 # Load native completion system
 autoload -Uz compinit
-export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
+ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump"
 compinit -d "$ZSH_COMPDUMP"
 
 # ---------- History Setup ----------

@@ -3,6 +3,9 @@
 # ---------- Homebrew Setup ----------
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
+# Personal application settings and secrets (not tracked by Git)
+[[ -r "$ZDOTDIR/env.local.zsh" ]] && source "$ZDOTDIR/env.local.zsh"
+
 # ---------- Shell Options & Completions ----------
 setopt AUTO_CD               # cd by typing directory name
 setopt NO_BEEP               # quiet shell

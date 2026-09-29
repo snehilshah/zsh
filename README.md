@@ -24,11 +24,13 @@ brew install zsh-autosuggestions zsh-history-substring-search zsh-fast-syntax-hi
 
 ### Locate Shell Configuration
 
-Ensure your shell knows where to find the config. Set `ZDOTDIR` before starting Zsh (or in your distribution's global `zshenv`):
+Create a home-directory link to the tracked `.zshenv` so both system Zsh and Homebrew Zsh find this configuration, even when `ZDOTDIR` is not already set:
 
 ```bash
-export ZDOTDIR="$HOME/.config/zsh"
+ln -s .config/zsh/.zshenv "$HOME/.zshenv"
 ```
+
+If `~/.zshenv` already exists, source `"$HOME/.config/zsh/.zshenv"` from it instead of replacing it.
 
 ## Structure
 

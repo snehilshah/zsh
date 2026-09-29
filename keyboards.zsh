@@ -1,6 +1,6 @@
 # ---------- Word Style & Key Bindings ----------
-# Treat '/' as a word separator by excluding it from WORDCHARS
-WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+# Treat '/', '-', and '.' as word separators by excluding them from WORDCHARS
+WORDCHARS='*?_[]~=&;!#$%^(){}<>'
 
 # Explicitly bind Alt+Backspace to delete a complete word
 bindkey '^[^?' backward-kill-word
@@ -51,3 +51,8 @@ bindkey "^H" backward-delete-char
 bindkey -M viins "^?" backward-delete-char
 bindkey -M viins "^H" backward-delete-char
 
+# Do not visually select freshly pasted text
+zle_highlight=(paste:none)
+
+# Skip synchronous syntax highlighting for large pasted commands
+typeset -g ZSH_HIGHLIGHT_MAXLENGTH=1000
